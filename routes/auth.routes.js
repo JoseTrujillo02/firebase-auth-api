@@ -25,7 +25,7 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               displayName:
  *                 type: string
  *               email:
  *                 type: string
@@ -40,7 +40,7 @@ const router = express.Router();
 router.post(
   '/register',
   [
-    body('name').notEmpty().withMessage('El nombre es obligatorio'),
+    body('displayName').notEmpty().withMessage('El nombre es obligatorio'),
     body('email').isEmail().withMessage('El email no es válido'),
     body('password')
       .isLength({ min: 6 })
@@ -52,20 +52,20 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { displayName, email, password } = req.body;
 
     try {
       const userRecord = await admin.auth().createUser({
         email,
         password,
-        displayName: name,
+        displayName: displayName,
       });
 
       res.status(201).json({
         message: 'Usuario registrado correctamente',
         uid: userRecord.uid,
         email: userRecord.email,
-        name: userRecord.displayName,
+        displayName: userRecord.displayName,
       });
     } catch (error) {
       res.status(400).json({ error: error.message });
