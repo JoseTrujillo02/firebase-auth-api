@@ -3,12 +3,12 @@ import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 
 // 🧩 1. Verificar que la variable de entorno exista
-if (!process.env.FIREBASE_CONFIG) {
-  throw new Error('❌ La variable FIREBASE_CONFIG no está definida en Render.');
+if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+  throw new Error('❌ La variable FIREBASE_SERVICE_ACCOUNT_JSON no está definida en Render.');
 }
 
 // 🧠 2. Parsear el JSON de las credenciales
-const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
 
 // 🔧 3. Normalizar saltos de línea del private_key (Render a veces los pasa con "\\n")
 if (typeof serviceAccount.private_key === 'string') {
