@@ -1,14 +1,25 @@
-// firebase.js
-const admin = require('firebase-admin');
+// firebase.js  (ESM con export default)
+import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+
+if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT_JSON no está definida');
+}
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-// Si guardas la private_key con \n escapado:
-if (serviceAccount.private_key && serviceAccount.private_key.includes('\\n')) {
+if (serviceAccount.private_key?.includes('\\n')) {
   serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+const app = getApps().length
+  ? getApp()
+  : initializeApp({ credential: cert(serviceAccount) });
 
-module.exports = admin;
+// exponemos un objeto estilo "admin" con lo que tus rutas usan:
+// - auth: para crear usuarios, etc.
+const admin = {
+  auth: () => getAuth(app),
+};
+
+// 👇 ESTE ES EL PUNTO CLAVE
+export default admin;
