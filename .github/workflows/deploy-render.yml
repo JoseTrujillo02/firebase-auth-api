@@ -33,4 +33,4 @@ jobs:
       # Desencadenar despliegue en Render
       - name: Trigger Render Deploy Hook
         run: |
-          curl -fsSL -X POST "https://firebase-auth-api.onrender.com/"
+          curl -fsSL -X POST "https://api.render.com/deploy/srv-d3rhse6r433s73e5m3ag?key=u3SprO83V4I"
